@@ -1,2 +1,3 @@
 # channel-stats-bot
-Basic stats for telegram channel
+
+Приватный бот для обслуживания одного киевского канала.
