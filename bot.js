@@ -52,8 +52,11 @@ bot.on('message', msg => {
 	}
 
 	if (msg.chat.type == 'private') {
-		// if (msg.text == '/start') {
-		bot.sendMessage(msg.chat.id, NOT_WELCOME_MESSAGE, { parse_mode: 'Markdown' });
+		if (msg.text.startsWith('/say') && config.bosses.includes(String(msg.from.id)))  {
+			bot.sendMessage(config.chatId, msg.text.substr(4).trim(), { parse_mode: 'Markdown' });
+		} else {
+			bot.sendMessage(msg.chat.id, NOT_WELCOME_MESSAGE, { parse_mode: 'Markdown' });
+		}
 		return;
 	}
 
