@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client } = require('..')
+const { Client } = require('tglib')
 
 async function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
