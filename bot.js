@@ -6,6 +6,7 @@ const config = require('./config');
 
 const TelegramBot = require('node-telegram-bot-api');
 const sqlite3 = require('sqlite3');
+const fs = require('fs');
 
 const NOT_WELCOME_MESSAGE = "Привет. Я приватный бот для обслуживания одного канала. Ничем не могу помочь. До свидания и хорошего дня :-)";
 
@@ -41,10 +42,41 @@ function createDb(db) {
 	)`);
 }
 
-const bot = new TelegramBot(config.TELEGRAM_TOKEN, { polling: true });
+function getSeenAtByUserId(db) {
+	const hash = {};
+	return new Promise(resolve => {
+		db.all('SELECT fromId, seenAt FROM Stats', (err, results) => {
+			if (err) {
+				throw err;
+			}
+
+			for (const result of results) {
+				hash[result.fromId] = result.seenAt;
+			}
+
+			resolve(hash);
+		});
+	});
+}
+
+async function dumpSeenList(db) {
+	const seenAtByUserId = await getSeenAtByUserId(db);
+	fs.writeFileSync('seen.json', JSON.stringify(seenAtByUserId, null, "\t"));
+	console.log("Wrote seen.json");
+}
+
+/* main */
+
 const db = new sqlite3.Database('./stats.sqlite3');
 
 createDb(db);
+
+if (process.argv[2] == '--kill') {
+	dumpSeenList(db);
+	process.exit(0);
+}
+
+const bot = new TelegramBot(config.TELEGRAM_TOKEN, { polling: true });
 
 bot.on('message', msg => {
 	if (msg.from.is_bot) {
