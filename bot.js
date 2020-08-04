@@ -47,6 +47,7 @@ function getSeenAtByUserId(db) {
 	return new Promise(resolve => {
 		db.all('SELECT fromId, seenAt FROM Stats', (err, results) => {
 			if (err) {
+				console.log(err);
 				throw err;
 			}
 
@@ -67,12 +68,15 @@ async function dumpSeenList(db) {
 
 /* main */
 
+(async function() {
+
 const db = new sqlite3.Database('./stats.sqlite3');
 
 createDb(db);
 
 if (process.argv[2] == '--kill') {
-	dumpSeenList(db);
+	console.log("dump db");
+	await dumpSeenList(db);
 	process.exit(0);
 }
 
@@ -109,3 +113,5 @@ bot.on('message', msg => {
 		username: msg.from.username
 	});
 });
+
+}());
