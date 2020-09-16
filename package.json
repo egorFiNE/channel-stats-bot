@@ -5,11 +5,11 @@
  "license": "MIT",
  "dependencies": {
   "node-telegram-bot-api": "^0.50.0",
-  "sqlite3": "^4.2.0",
+  "sqlite3": "^5.0.0",
   "tglib": "^3.0.5"
  },
  "devDependencies": {
   "babel-eslint": "^10.1.0",
-  "eslint": "^7.6.0"
+  "eslint": "^7.9.0"
  }
 }
